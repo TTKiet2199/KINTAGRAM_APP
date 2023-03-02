@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:kintagram_app/pages/login_page.dart';
+import 'package:kintagram_app/pages/register_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,10 +12,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Kintagram',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.lime,
       ),
+      initialRoute: 'login',
+      routes: {
+        'register': (context) => RegisterPage(),
+        'login': (context) => LoginPage(),
+      },
     );
   }
 }
