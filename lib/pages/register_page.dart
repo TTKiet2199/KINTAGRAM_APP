@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -9,6 +12,9 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   double? deviceHeight, deviceWidth;
+  final GlobalKey<FormState> registerFormKey = GlobalKey<FormState>();
+  String? name, email, password;
+  File? image; //dùng File có import dart:io
   @override
   Widget build(BuildContext context) {
     deviceHeight = MediaQuery.of(context).size.height;
@@ -24,6 +30,8 @@ class _RegisterPageState extends State<RegisterPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 _titleWidget(),
+                _profileTmageWidget(),
+                _registrationForm(),
                 _registerButton(),
               ],
             ),
@@ -41,9 +49,89 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
+  Widget _profileTmageWidget() {
+    var imageProvider = image != null
+        ? FileImage(image!)
+        : const NetworkImage('https://i.pravatar.cc/300');
+    return GestureDetector(
+      onTap: () {
+        FilePicker.platform.pickFiles(type: FileType.image).then((result) {
+          setState(() {
+            image = File(result!.files.first.path!);
+          });
+        });
+      },
+      child: Container(
+        height: deviceHeight! * 0.25,
+        width: deviceWidth! * 0.55,
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                fit: BoxFit.cover, image: imageProvider as ImageProvider)),
+      ),
+    );
+  }
+
+  Widget _registrationForm() {
+    return Form(
+        key: registerFormKey,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            _nameTextField(),
+            _emailTextField(),
+            _passwordTextField(),
+          ],
+        ));
+  }
+
+  Widget _nameTextField() {
+    return TextFormField(
+      decoration: const InputDecoration(hintText: 'Name....'),
+      validator: (value) => value!.isNotEmpty ? null : 'Please enter a name',
+      onSaved: (value) {
+        setState(() {
+          name = value;
+        });
+      },
+    );
+  }
+
+  Widget _emailTextField() {
+    return TextFormField(
+      decoration: const InputDecoration(hintText: 'Email...'),
+      onSaved: ((value) {
+        setState(() {
+          email = value;
+        });
+      }),
+      validator: (value) {
+        bool result = value!.contains(RegExp(
+            r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$'));
+        return result ? null : 'Please enter a valid email';
+      },
+    );
+  }
+
+  Widget _passwordTextField() {
+    return TextFormField(
+      obscureText: true,
+      decoration: const InputDecoration(hintText: 'Password...'),
+      onSaved: ((value) {
+        setState(() {
+          password = value;
+        });
+      }),
+      validator: (value) => value!.length > 6
+          ? null
+          : 'Please enter a password greater than 6 character.',
+    );
+  }
+
   Widget _registerButton() {
     return MaterialButton(
-      onPressed: () {},
+      onPressed: _registerUser,
       minWidth: deviceWidth! * 0.7,
       height: deviceHeight! * 0.06,
       color: Colors.blue,
@@ -53,5 +141,11 @@ class _RegisterPageState extends State<RegisterPage> {
             color: Colors.white, fontSize: 25, fontWeight: FontWeight.w600),
       ),
     );
+  }
+
+  void _registerUser() {
+    if (registerFormKey.currentState!.validate() && image != null) {
+      registerFormKey.currentState!.save();
+    }
   }
 }
