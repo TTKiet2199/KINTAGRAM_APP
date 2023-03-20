@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:kintagram_app/services/firebase_service.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -12,7 +13,8 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   double? deviceHeight, deviceWidth;
-  final GlobalKey<FormState> registerFormKey = GlobalKey<FormState>();
+  FirebaseService? _firebaseService;
+  final GlobalKey<FormState> _registerFormKey = GlobalKey<FormState>();
   String? name, email, password;
   File? image; //dùng File có import dart:io
   @override
@@ -52,7 +54,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget _profileTmageWidget() {
     var imageProvider = image != null
         ? FileImage(image!)
-        : const NetworkImage('https://i.pravatar.cc/300');
+        : const NetworkImage('https://i.pravatar.cc/150?img=50');
     return GestureDetector(
       onTap: () {
         FilePicker.platform.pickFiles(type: FileType.image).then((result) {
@@ -73,7 +75,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Widget _registrationForm() {
     return Form(
-        key: registerFormKey,
+        key: _registerFormKey,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           mainAxisSize: MainAxisSize.max,
@@ -143,9 +145,12 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  void _registerUser() {
-    if (registerFormKey.currentState!.validate() && image != null) {
-      registerFormKey.currentState!.save();
+  void _registerUser() async {
+    if (_registerFormKey.currentState!.validate() && image != null) {
+      _registerFormKey.currentState!.save();
+      bool result = await _firebaseService!.registerUser(
+          name: name!, email: email!, password: password!, images: image!);
+      if (result) Navigator.pop(context);
     }
   }
 }

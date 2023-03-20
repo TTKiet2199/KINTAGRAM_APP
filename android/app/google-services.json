@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "1013601710536",
+    "project_id": "kintagram-app",
+    "storage_bucket": "kintagram-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1013601710536:android:cbd1a6c837611aa77990fd",
+        "android_client_info": {
+          "package_name": "com.example.kintagram_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1013601710536-q5qq6h3e3cs93d9d62q23re82nna0gst.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBofsA-aMkLia0cuHg5qKbhM-wOyAjNeAE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1013601710536-q5qq6h3e3cs93d9d62q23re82nna0gst.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1013601710536-5235v345a2nrogr67rj7j2lvch0rfchi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.kintagramApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
