@@ -43,8 +43,9 @@ class _HomePageState extends State<HomePage> {
           Padding(
             padding: const EdgeInsets.only(left: 8, right: 8),
             child: GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(context, 'login');
+              onTap: () async {
+                await firebaseService!.logOut();
+                Navigator.popAndPushNamed(context, 'login');
               },
               child: const Icon(Icons.logout),
             ),
@@ -75,5 +76,6 @@ class _HomePageState extends State<HomePage> {
     FilePickerResult? result =
         await FilePicker.platform.pickFiles(type: FileType.image);
     File image = File(result!.files.first.path!);
+    firebaseService!.postImage(image);
   }
 }

@@ -1,7 +1,7 @@
 import 'dart:io';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:kintagram_app/services/firebase_service.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -17,6 +17,12 @@ class _RegisterPageState extends State<RegisterPage> {
   final GlobalKey<FormState> _registerFormKey = GlobalKey<FormState>();
   String? name, email, password;
   File? image; //dùng File có import dart:io
+  @override
+  void initState() {
+    super.initState();
+    _firebaseService = GetIt.instance.get<FirebaseService>();
+  }
+
   @override
   Widget build(BuildContext context) {
     deviceHeight = MediaQuery.of(context).size.height;
@@ -150,7 +156,10 @@ class _RegisterPageState extends State<RegisterPage> {
       _registerFormKey.currentState!.save();
       bool result = await _firebaseService!.registerUser(
           name: name!, email: email!, password: password!, images: image!);
-      if (result) Navigator.pop(context);
+      // print('ss$result');
+      if (result) {
+        Navigator.pop(context);
+      }
     }
   }
 }
